@@ -3,15 +3,15 @@ import { BrowserWindow, ipcMain, IpcMainEvent } from "electron"
 import { ProductCH, WorkerCH } from './ipc/cmdChannels'
 import { productIpcInit } from "./ipc/product"
 
-import { PrintWorker, WorkingState } from "./printWorker"
+import { PrintWorker, printWorkerInterface, WorkingState } from "./printWorker"
 
-let worker = new PrintWorker()
+let worker = new printWorkerInterface()
 async function mainProsessing(mainWindow:BrowserWindow){
     ipcMain.on(WorkerCH.startRM,(event:IpcMainEvent,path:string,material:string)=>{
         try {
             let nameArr = path.split('/')
             let name = nameArr[nameArr.length - 1]
-            worker.print()
+            worker.run()
 
         } catch (error) {
             
@@ -24,9 +24,6 @@ async function mainProsessing(mainWindow:BrowserWindow){
     })
     worker.onStateChangeCB((state:WorkingState,message?:string)=>{
         mainWindow.webContents.send(WorkerCH.onWorkingStateChangedMR,state,message)
-    })
-    worker.onSetTotalTimeCB((value:number)=>{
-        mainWindow.webContents.send(WorkerCH.onSetTotalTimeMR,value)
     })
     ipcMain.on(WorkerCH.commandRM,(event:IpcMainEvent,cmd:string)=>{
         switch (cmd) {
@@ -47,7 +44,7 @@ async function mainProsessing(mainWindow:BrowserWindow){
         }
     })
     ipcMain.on(WorkerCH.requestPrintInfoRM,(event:IpcMainEvent)=>{
-        mainWindow.webContents.send(WorkerCH.onPrintInfoMR,...worker.getPrintInfo())
+        mainWindow.webContents.send(WorkerCH.onPrintInfoMR)
     })
     productIpcInit(mainWindow)
 }

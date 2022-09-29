@@ -13,7 +13,6 @@ import arrowDirImg from '../assets/arrow-dir.png'
 import MainArea from '../layout/MainArea';
 import { useNavigate } from 'react-router-dom';
 
-import {encode} from 'js-base64'
 import Modal from '../components/Modal';
 import { ModalNotice } from '../layout/ModalInfo';
 
@@ -104,8 +103,7 @@ function Model(){
             </MainArea>
             <Footer>
                 <Button color='gray' type='small' onClick={() => {navigate(-1)}}>Back</Button>
-                <Button color='blue' type='small' onClick={() => {
-                    if(selectFile.name != "") navigate(`/material/${encode(selectFile.path)}`)}}>Select</Button>
+                <Button color='blue' type='small' onClick={() => {if(selectFile.name != "") navigate(`/material/`)}}>Select</Button>
             </Footer>
             
             <Modal visible={storageDisconnectModalVisible} onBackClicked={() => {navigate(-1)}} selectVisible={false}>

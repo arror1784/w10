@@ -66,10 +66,10 @@ function createWindow() {
 
         });
     }
-    // mainProsessing(mainWin)
+    mainProsessing(mainWin)
 }
 
 app.whenReady().then(() => {
-    // ipcHandle()
+    ipcHandle()
     createWindow()
 })

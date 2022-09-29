@@ -3,10 +3,11 @@
 import classNames from 'classnames'
 import styled from 'styled-components'
 
-import { Element, animateScroll as scroll,} from 'react-scroll'
+import { animateScroll as scroll,} from 'react-scroll'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { v4 as uuidV4 } from 'uuid'
+
 type SlideTextProps = {
     text:string,
 }

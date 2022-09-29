@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron'
 import { DirOrFile } from './ipc/filesystem'
-import { FileSystemCH, ProductCH, WorkerCH } from './ipc/cmdChannels';
+import { FactoryResetCH, FileSystemCH, ProductCH, WorkerCH } from './ipc/cmdChannels';
 
 let _id = 0
 
@@ -69,7 +69,7 @@ const exposedApi: electronApiInterface = {
     printStartRM: (path : string, material : string) => ipcRenderer.send(WorkerCH.startRM,path,material),
     printCommandRM: (cmd :string) => ipcRenderer.send(WorkerCH.commandRM,cmd),
     requestPrintInfoRM: () => ipcRenderer.send(WorkerCH.requestPrintInfoRM),
-    factoryRestRM:()=>ipcRenderer.send("factoryReset"),
+    factoryRestRM:()=>ipcRenderer.send(FactoryResetCH.FactoryReset),
 
     onWorkingStateChangedMR: (callback:(event: IpcRendererEvent,state: string,message?:string) => void) => {return eventADD(WorkerCH.onWorkingStateChangedMR,callback)},
     onPrintInfoMR: (callback:(event:IpcRendererEvent,state: string, material: string, 

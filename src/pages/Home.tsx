@@ -20,25 +20,25 @@ function Home(){
     
     
     useEffect(() => {
-        window.electronAPI.getProductInfoTW().then(
-            (value : string[]) => { //0:version,1:serial,2:wifi,3:ip,
-                setVersion(value[0])
-                setSerial(value[1])
-                setWifi(value[2])
-                if(value.length > 3){
-                    let a : string[] = []
-                    for (let i = 3; i < value.length; i++) {
-                        a.push(value[i])
-                    }
-                    setIp(a)
-                }
-            })
+        // window.electronAPI.getProductInfoTW().then(
+        //     (value : string[]) => { //0:version,1:serial,2:wifi,3:ip,
+        //         setVersion(value[0])
+        //         setSerial(value[1])
+        //         setWifi(value[2])
+        //         if(value.length > 3){
+        //             let a : string[] = []
+        //             for (let i = 3; i < value.length; i++) {
+        //                 a.push(value[i])
+        //             }
+        //             setIp(a)
+        //         }
+        //     })
     }, [modalVisible])
     
     return (
     <HomeArea>
         <HomeContainer>
-            <ImageButton type="main1" src={fileImg} onClick={() => {navigate('/model')}}>Select File</ImageButton>
+            <ImageButton type="main1" src={fileImg} onClick={() => {navigate('/model')}}>Wash</ImageButton>
             <ImageButton type="main2" src={settingImg} color="gray" onClick={() => {navigate('/setting')}}>Setting</ImageButton>
             <ImageButton type="main2" src={infoImg} color="gray" onClick={()=>{setModalVisible(true)}}>Info</ImageButton> 
         </HomeContainer>

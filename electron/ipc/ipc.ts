@@ -1,5 +1,5 @@
 import { ipcMain } from "electron"
-import { FileSystemCH } from "./cmdChannels"
+import { FactoryResetCH, FileSystemCH } from "./cmdChannels"
 
 import { getUSBPath, readDir } from "./filesystem"
 
@@ -9,7 +9,7 @@ function ipcHandle(){
     ipcMain.handle(FileSystemCH.readDirTW, readDir)
     ipcMain.handle(FileSystemCH.getUSBPathTW,getUSBPath)
 
-    ipcMain.on("factoryReset",factoryReset)
+    ipcMain.on(FactoryResetCH.FactoryReset,factoryReset)
 }
 
 export {ipcHandle}

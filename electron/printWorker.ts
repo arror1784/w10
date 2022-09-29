@@ -1,13 +1,10 @@
-import { LEDEnable,MoveLength,MovePosition,Wait,actionType, Action, AutoHome, SetImage, CheckTime, LEDToggle, ProcessImage } from './actions'
-import { getPrinterSetting } from './json/printerSetting'
+import { Wait,actionType, Action,GPIOAction,
+    GPIOEnable,GPIOPin,PWMAction,PWMEnable,PWMLinearAccel,PWMSetDuty,PWMSetPeriod } from './actions'
+
 import { Stopwatch } from 'ts-stopwatch'
 
-import * as fs from 'fs'
+import { Gpio } from 'pigpio'
 
-import { getProductSetting } from './json/productSetting';
-
-
-const sliceFileRoot : string = process.platform === "win32" ? process.cwd() + "/temp/print/printFilePath/" : "/opt/capsuleFW/print/printFilePath/"
 
 enum WorkingState{
     working = "working",
@@ -15,8 +12,7 @@ enum WorkingState{
     stopWork = "stopWork",
     pause = "pause",
     pauseWork = "pauseWork",
-    error = "error",
-    lock = "lock"
+    error = "error"
 }
 
 enum MoveMotorCommand{
@@ -25,41 +21,32 @@ enum MoveMotorCommand{
     MoveMicro="MoveMicro",
     MoveMaxHeight="MoveMaxHeight",
 }
-class PrintWorker{
+class printWorkerInterface{
 
-    private _actions: Array<Action> = new Array<Action>(10000);
+    protected _actions: Array<Action> = new Array<Action>(10000);
 
-    private _name: string = ""
-    private _currentStep: number = 0
-    private _workingState: WorkingState = WorkingState.stop
-    private _progress : number = 0
-    private _lcdState : boolean = true
-    private _printingErrorMessage : string = ""
-    private _stopwatch : Stopwatch = new Stopwatch()
-    private _curingStopwatch : Stopwatch = new Stopwatch()
-    private _totalTime: number = 0
+    protected _name: string = ""
+    protected _currentStep: number = 0
+    protected _workingState: WorkingState = WorkingState.stop
+    protected _progress : number = 0
+    protected _stopwatch : Stopwatch = new Stopwatch()
+    protected _totalTime: number = 0
 
-    private _onProgressCallback?: (progress : number) => void
-    private _onWorkingStateChangedCallback?: (state : WorkingState,message?:string) => void
-    private _onSetTotaltime?: (value : number) => void
+    protected _onProgressCallback?: (progress : number) => void
+    protected _onWorkingStateChangedCallback?: (state : WorkingState,message?:string) => void
+    protected _onSetTotaltime?: (value : number) => void
     
+
     constructor(){
     }
-    getPrintInfo(){ //[state,resinname,filename,layerheight,elapsedtime,totaltime,progress]
-        return []
-    }
     
-    print(){
-        this.run()
-    }
-    
-    private run(){
+    run(){
+
         this.process()
 
         return true
     }
     createActions() {
-
         this._actions = []
 
         this._actions.push(new Wait(1000))
@@ -81,7 +68,6 @@ class PrintWorker{
         if(prevState != WorkingState.working && prevState != WorkingState.pauseWork){
             this.process()
         }
-
         this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
     }
     printAgain(){
@@ -94,10 +80,6 @@ class PrintWorker{
             if(this._currentStep == this._actions.length)
                 this.stop()
             
-            if(!this._lcdState){
-                this._workingState = WorkingState.error
-                this._printingErrorMessage = "Error: LCD가 빠졌습니다."
-            }
             switch (this._workingState) {
                 case WorkingState.pauseWork:
                     this._workingState = WorkingState.pause
@@ -105,11 +87,10 @@ class PrintWorker{
                     this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
                     return;
                 case WorkingState.stopWork:
-                    this._workingState = WorkingState.lock
+                    this._workingState = WorkingState.stop
                     this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
                     return;
                 case WorkingState.error:
-                    this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(WorkingState.error,this._printingErrorMessage)
                     this.stop()
                     return;
                 default:
@@ -120,35 +101,18 @@ class PrintWorker{
 
             const action = this._actions[this._currentStep]
             switch (action.type) {
-                case "autoHome":
+                case "GPIOEnable":
                     break;
-                case "ledEnable":
+                case "PWMEnable":
                     break;
-                case "ledToggle":
+                case "PWMSetDuty":
                     break;
-                case "moveLength":
+                case "PWMSetPeriod":
                     break;
-                case "movePosition":
+                case "PWMLinearAccel":
                     break;
-                case "wait":
+                case "Wait":
                      await new Promise(resolve => setTimeout(resolve, (action as Wait).msec));
-                    break;
-                case "processImage":
-                    break;
-                case "setImage":
-                    break;
-                case "checkTime":
-                    switch ((action as CheckTime).checkTimeType) {
-                        case 'start':
-                            this._curingStopwatch.start()
-                            break;
-                        case 'finish':
-                            this._curingStopwatch.stop()
-                            this._onSetTotaltime && this._onSetTotaltime(this._totalTime)
-                            break;
-                        default:
-                            break;
-                    }
                     break;
                 default:
                     break;
@@ -156,18 +120,80 @@ class PrintWorker{
             this._currentStep++
         }
     }
-    unlock(){
-        this._workingState = WorkingState.stop
-    }
     onProgressCB(cb : (progreess: number) => void){
         this._onProgressCallback = cb
     }
     onStateChangeCB(cb : (state : WorkingState,message?:string) => void){
         this._onWorkingStateChangedCallback = cb
     }
-    onSetTotalTimeCB(cb : (value : number) => void){
-        this._onSetTotaltime = cb
-        
+}
+class PrintWorker extends printWorkerInterface{
+
+    protected _gpioMap = new Map<GPIOPin,Gpio>()
+
+    constructor(){
+        super()
+
+        this._gpioMap.set(GPIOPin.gp1,new Gpio(GPIOPin.gp1,{mode:Gpio.OUTPUT}))
+        this._gpioMap.set(GPIOPin.propeller1,new Gpio(GPIOPin.propeller1,{mode:Gpio.OUTPUT}))
+        this._gpioMap.set(GPIOPin.propeller2,new Gpio(GPIOPin.propeller2,{mode:Gpio.OUTPUT}))
+        this._gpioMap.set(GPIOPin.pump1,new Gpio(GPIOPin.pump1,{mode:Gpio.OUTPUT}))
+        this._gpioMap.set(GPIOPin.pump2,new Gpio(GPIOPin.pump2,{mode:Gpio.OUTPUT}))
+        this._gpioMap.set(GPIOPin.valve,new Gpio(GPIOPin.valve,{mode:Gpio.OUTPUT}))
+    }
+    async process(){
+        this._stopwatch.start()
+        while(this._currentStep <= this._actions.length) {
+
+            if(this._currentStep == this._actions.length)
+                this.stop()
+            
+            switch (this._workingState) {
+                case WorkingState.pauseWork:
+                    this._workingState = WorkingState.pause
+                    this._stopwatch.stop()
+                    this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
+                    return;
+                case WorkingState.stopWork:
+                    this._workingState = WorkingState.stop
+                    this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
+                    return;
+                case WorkingState.error:
+                    this.stop()
+                    return;
+                default:
+                    break;
+            }
+            this._progress = this._currentStep / this._actions.length
+            this._onProgressCallback && this._onProgressCallback(this._progress)
+
+            const action = this._actions[this._currentStep]
+            switch (action.type) {
+                case "GPIOEnable":
+                    let gpioEnable = (action as GPIOEnable)
+
+                    this._gpioMap.get(gpioEnable.pin)?.digitalWrite(gpioEnable.level)
+                    break;
+                case "PWMEnable":
+                
+                    break;
+                case "PWMSetDuty":
+                    let pwmSetDuty = (action as PWMSetDuty)
+                    this._gpioMap.get(pwmSetDuty.pin)?.pwmWrite(pwmSetDuty.duty)
+                    break;
+                case "PWMSetPeriod":
+                    let pemSetPeriod = (action as PWMSetPeriod)
+                    this._gpioMap.get(pemSetPeriod.pin)?.pwmRange(pemSetPeriod.period)
+                    break;
+                case "Wait":
+                    await new Promise(resolve => setTimeout(resolve, (action as Wait).msec))
+
+                    break;
+                default:
+                    break;
+            }
+            this._currentStep++
+        }
     }
 }
 
@@ -176,4 +202,4 @@ function checktime(){
 }
 
 
-export {PrintWorker,WorkingState,MoveMotorCommand}
+export {PrintWorker,printWorkerInterface,WorkingState,MoveMotorCommand}

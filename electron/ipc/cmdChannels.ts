@@ -13,7 +13,7 @@ enum FileSystemCH{
     readDirTW = "FileSystem:readDir,RT:DirOrFile[]",
     getLayerHeightTW = "FileSystem:getLayerHeight,filePath:string",
     isCustomTW = "Filesystem:getLayerHeightTW,filePath:string",
-    getUSBPathTW = "FileSystemCH    :getUSBPathTW",
+    getUSBPathTW = "FileSystemCH:getUSBPathTW",
 
 }
 enum ProductCH{
@@ -43,4 +43,7 @@ enum WorkerCH{
     onProgressMR = "worker:onProgress,progress:number",
     onSetTotalTimeMR = "worker:onSetTotalTimeMR",
 }
-export { FileSystemCH,WorkerCH,ProductCH,}
+enum FactoryResetCH{
+    FactoryReset = "FactoryReset"
+}
+export { FileSystemCH,WorkerCH,ProductCH,FactoryResetCH}

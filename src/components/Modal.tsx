@@ -40,16 +40,17 @@ interface ModalProps{
     onSelectClicked?: () => void,
 }
 function Modal({ className, visible, children, backVisible,backString,onBackClicked,selectVisible,selectString,onSelectClicked,btnEnable } : ModalProps) {
-  return (
-    <ReactModal isOpen={visible} style={customStyles} ariaHideApp={false}>
-      <ModalMainArea height={backVisible || selectVisible ? 220 : 280}>
-        {children}
-      </ModalMainArea>
-        <Footer>
-          <Button color='gray' type='modal' enable={btnEnable} onClick={() => {onBackClicked && onBackClicked()}} visible={backVisible}>{backString}</Button>
-          <Button color='blue' type='modal' enable={btnEnable} onClick={() => {onSelectClicked && onSelectClicked()}} visible={selectVisible}>{selectString}</Button>
-        </Footer>
-    </ReactModal>
+  return (<div>
+      <ReactModal isOpen={visible} style={customStyles} ariaHideApp={false}>
+        <ModalMainArea height={backVisible || selectVisible ? 220 : 280}>
+          {children}
+        </ModalMainArea>
+          <Footer>
+            <Button color='gray' type='modal' enable={btnEnable} onClick={() => {onBackClicked && onBackClicked()}} visible={backVisible}>{backString}</Button>
+            <Button color='blue' type='modal' enable={btnEnable} onClick={() => {onSelectClicked && onSelectClicked()}} visible={selectVisible}>{selectString}</Button>
+          </Footer>
+      </ReactModal>
+      </div>
   )
 }
 
