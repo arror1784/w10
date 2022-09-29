@@ -54,8 +54,8 @@ class CourseLoader{
         return this._duration
     }
 }
-const modelNOInstance = new CourseLoader()
+const courseLoaderInstanse = new CourseLoader()
 
-export function getModelNOInstance(){
-    return modelNOInstance
+export function getCourseLoaderInstance(){
+    return courseLoaderInstanse
 }

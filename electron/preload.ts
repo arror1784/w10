@@ -40,15 +40,14 @@ interface electronApiInterface {
     getUartConnectionErrorTW: ()=>Promise<boolean>;
     getUSBPathTW:()=>Promise<string>;
     
-    printStartRM: (path : string, material : string) => void;
+    printStartRM: (path : string) => void;
     printCommandRM: (cmd :string) => void;
     requestPrintInfoRM: () => void;
     factoryRestRM:()=>void;
     
     onWorkingStateChangedMR: (callback:(event:IpcRendererEvent,state: string,message?:string) => void) => EventListener;
-    onPrintInfoMR: (callback:(event:IpcRendererEvent,state: string, material: string, 
-                                filename: string, layerheight: number, elapsedTime: number, 
-                                totalTime: number,progress : number,enabelTimer: number) => void) => EventListener;
+    onPrintInfoMR: (callback:(event:IpcRendererEvent,state: string, name: string, elapsedTime: number, 
+                                totalTime: number,progress : number) => void) => EventListener;
     onStartErrorMR: (callback:(event:IpcRendererEvent,error: string) => void) => EventListener;
     onProgressMR: (callback:(event:IpcRendererEvent,progress: number) => void) => EventListener;
     onSetTotalTimeMR: (callback:(event:IpcRendererEvent,value:number)=>void) => EventListener;
@@ -66,15 +65,14 @@ const exposedApi: electronApiInterface = {
     getUartConnectionErrorTW: ()=>ipcRenderer.invoke(ProductCH.getUartConnectionErrorTW),
     getUSBPathTW:()=>ipcRenderer.invoke(FileSystemCH.getUSBPathTW),
 
-    printStartRM: (path : string, material : string) => ipcRenderer.send(WorkerCH.startRM,path,material),
+    printStartRM: (path : string) => ipcRenderer.send(WorkerCH.startRM,path),
     printCommandRM: (cmd :string) => ipcRenderer.send(WorkerCH.commandRM,cmd),
     requestPrintInfoRM: () => ipcRenderer.send(WorkerCH.requestPrintInfoRM),
     factoryRestRM:()=>ipcRenderer.send(FactoryResetCH.FactoryReset),
 
     onWorkingStateChangedMR: (callback:(event: IpcRendererEvent,state: string,message?:string) => void) => {return eventADD(WorkerCH.onWorkingStateChangedMR,callback)},
-    onPrintInfoMR: (callback:(event:IpcRendererEvent,state: string, material: string, 
-                                filename: string, layerheight: number, elapsedTime: number, 
-                                totalTime: number,progress : number,enabelTimer: number) => void) => {return eventADD(WorkerCH.onPrintInfoMR,callback)},
+    onPrintInfoMR: (callback:(event:IpcRendererEvent,state: string, name: string, elapsedTime: number, 
+        totalTime: number,progress : number) => void) => {return eventADD(WorkerCH.onPrintInfoMR,callback)},
     onStartErrorMR: (callback:(event:IpcRendererEvent,error: string) => void) => {return eventADD(WorkerCH.onStartErrorMR,callback)},
     onProgressMR: (callback:(event:IpcRendererEvent,progress: number) => void) => {return eventADD(WorkerCH.onProgressMR,callback)},
     onSetTotalTimeMR: (callback:(event:IpcRendererEvent,value:number)=>void) =>{return eventADD(WorkerCH.onSetTotalTimeMR,callback)},

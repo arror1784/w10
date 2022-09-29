@@ -3,11 +3,11 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import Button from '../components/Button';
 
 import Home from '../pages/Home';
-import Model from '../pages/Model';
 import Setting from '../pages/Setting';
 import Progress from '../pages/Progress';
 import Complete from '../pages/Complete';
 import FactoryReset from '../pages/FactoryReset';
+import Course from '../pages/Course';
 
 const AppRoute = () => {
     return (
@@ -16,7 +16,7 @@ const AppRoute = () => {
                 <Navigate to='/home'/>
             }/>
             <Route path='/home' element={<Home/>}/>
-            <Route path='/model' element={<Model/>}/>
+            <Route path='/course' element={<Course/>}/>
             <Route path='/progress' element={<Progress/>}/>
             <Route path='/complete/:totalElapsedTime/:error' element={<Complete/>}/>
 

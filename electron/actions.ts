@@ -18,6 +18,10 @@ enum GPIOPin
     propeller2 = 20,
     valve = 21,
     gp1 = 26,
+
+    pump = 12,
+    propeller = 13,
+
     none = -1
 }
 
@@ -35,6 +39,10 @@ export function nameToPin(name:string){
             return GPIOPin.valve
         case "gp1":
             return GPIOPin.gp1
+        case "pump":
+            return GPIOPin.pump
+        case "propeller":
+            return GPIOPin.propeller
         default:
             return GPIOPin.none
     }

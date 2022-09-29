@@ -21,7 +21,7 @@ interface DirOrFile extends SelectListModel{
     path:string;
 }
 
-function Model(){
+function Course(){
 
     const navigate = useNavigate()
 
@@ -58,7 +58,7 @@ function Model(){
     useEffect(() => {
         window.electronAPI.readDirTW(dirPath).then(
             (valueArr : DirOrFile[]) => {
-                let valueArrCopy = valueArr.filter((value:DirOrFile) => {return value.name.endsWith("zip") || value.isDir})
+                let valueArrCopy = valueArr.filter((value:DirOrFile) => {return value.name.endsWith("hc") || value.isDir})
                 valueArrCopy.sort((a:DirOrFile,b:DirOrFile) : number  => {
                     if(a.isDir && b.isDir)
                         return 0
@@ -72,7 +72,7 @@ function Model(){
     return (
         <div>
             <Header>
-                Select a file to print
+                Select a file to wash
             </Header>
             <MainArea>
                 <ParentArea>
@@ -103,7 +103,9 @@ function Model(){
             </MainArea>
             <Footer>
                 <Button color='gray' type='small' onClick={() => {navigate(-1)}}>Back</Button>
-                <Button color='blue' type='small' onClick={() => {if(selectFile.name != "") navigate(`/material/`)}}>Select</Button>
+                <Button color='blue' type='small' onClick={() => {
+                    window.electronAPI.printStartRM(selectFile.path)
+                }}>Select</Button>
             </Footer>
             
             <Modal visible={storageDisconnectModalVisible} onBackClicked={() => {navigate(-1)}} selectVisible={false}>
@@ -143,4 +145,4 @@ const CurrentDirText = styled.div`
     font-size: 22px;
 `
 
-export default Model;
+export default Course;

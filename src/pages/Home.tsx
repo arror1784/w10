@@ -38,7 +38,7 @@ function Home(){
     return (
     <HomeArea>
         <HomeContainer>
-            <ImageButton type="main1" src={fileImg} onClick={() => {navigate('/model')}}>Wash</ImageButton>
+            <ImageButton type="main1" src={fileImg} onClick={() => {navigate('/course')}}>Wash</ImageButton>
             <ImageButton type="main2" src={settingImg} color="gray" onClick={() => {navigate('/setting')}}>Setting</ImageButton>
             <ImageButton type="main2" src={infoImg} color="gray" onClick={()=>{setModalVisible(true)}}>Info</ImageButton> 
         </HomeContainer>

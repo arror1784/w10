@@ -6,12 +6,16 @@ import { productIpcInit } from "./ipc/product"
 import { PrintWorker, printWorkerInterface, WorkingState } from "./printWorker"
 
 let worker = new printWorkerInterface()
+
 async function mainProsessing(mainWindow:BrowserWindow){
-    ipcMain.on(WorkerCH.startRM,(event:IpcMainEvent,path:string,material:string)=>{
+
+
+
+    ipcMain.on(WorkerCH.startRM,(event:IpcMainEvent,path:string)=>{
         try {
             let nameArr = path.split('/')
             let name = nameArr[nameArr.length - 1]
-            worker.run()
+            worker.run(path,name)
 
         } catch (error) {
             
