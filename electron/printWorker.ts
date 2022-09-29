@@ -1,5 +1,5 @@
 import { Wait,actionType, Action,GPIOAction,
-    GPIOEnable,GPIOPin,PWMAction,PWMEnable,PWMLinearAccel,PWMSetDuty,PWMSetPeriod } from './actions'
+    GPIOWrite,GPIOPin,PWMAction,PWMLinearAccel,PWMSetDuty,PWMSetPeriod } from './actions'
 
 import { Stopwatch } from 'ts-stopwatch'
 
@@ -113,9 +113,7 @@ class printWorkerInterface{
 
             const action = this._actions[this._currentStep]
             switch (action.type) {
-                case "GPIOEnable":
-                    break;
-                case "PWMEnable":
+                case "GPIOWrite":
                     break;
                 case "PWMSetDuty":
                     break;
@@ -195,13 +193,10 @@ class PrintWorker extends printWorkerInterface{
 
             const action = this._actions[this._currentStep]
             switch (action.type) {
-                case "GPIOEnable":
-                    let gpioEnable = (action as GPIOEnable)
+                case "GPIOWrite":
+                    let gpioEnable = (action as GPIOWrite)
 
                     this._gpioMap.get(gpioEnable.pin)?.digitalWrite(gpioEnable.level)
-                    break;
-                case "PWMEnable":
-                
                     break;
                 case "PWMSetDuty":
                     let pwmSetDuty = (action as PWMSetDuty)

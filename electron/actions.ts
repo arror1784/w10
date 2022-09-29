@@ -1,6 +1,6 @@
 import { pipeline } from "stream";
 
-type actionType = "PWMAction" | "GPIOEnable" | "PWMEnable" | "PWMSetDuty" | "PWMLinearAccel" | "PWMSetPeriod" | "Wait";
+type actionType = "PWMAction" | "GPIOWrite" | "PWMSetDuty" | "PWMLinearAccel" | "PWMSetPeriod" | "Wait";
 
 
 //pump1: 6
@@ -72,21 +72,11 @@ class PWMAction extends GPIOAction{
         this.pin = pin
     }
 }
-class GPIOEnable extends GPIOAction{
-    type: actionType = "GPIOEnable";
+class GPIOWrite extends GPIOAction{
+    type: actionType = "GPIOWrite";
     pin: GPIOPin
 
     constructor(pin:GPIOPin,public readonly level:1|0){
-        super()
-        this.pin = pin
-    }
-}
-
-class PWMEnable extends GPIOAction{
-    type: actionType = "PWMEnable";
-    pin: GPIOPin
-
-    constructor(pin:GPIOPin,public readonly duty:number){
         super()
         this.pin = pin
     }
@@ -153,5 +143,5 @@ class PWMLinearAccel extends GPIOAction{
     }
 }
 
-export {Wait,Action,GPIOAction,GPIOEnable,GPIOPin,PWMAction,PWMEnable,PWMLinearAccel,PWMSetDuty,PWMSetPeriod};
+export {Wait,Action,GPIOAction,GPIOWrite,GPIOPin,PWMAction,PWMLinearAccel,PWMSetDuty,PWMSetPeriod};
 export type { actionType }

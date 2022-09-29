@@ -1,16 +1,26 @@
 
 import { BrowserWindow, ipcMain, IpcMainEvent } from "electron"
+import { arch } from "process"
+import { getCourseLoaderInstance } from "./courseLoader"
 import { ProductCH, WorkerCH } from './ipc/cmdChannels'
 import { productIpcInit } from "./ipc/product"
 
 import { PrintWorker, printWorkerInterface, WorkingState } from "./printWorker"
 
-let worker = new printWorkerInterface()
+import fs from 'fs'
+
+let worker : printWorkerInterface | PrintWorker
+if(arch == "arm")
+    worker = new PrintWorker()
+else
+    worker = new printWorkerInterface()
 
 async function mainProsessing(mainWindow:BrowserWindow){
 
-
-
+    let data = fs.readFileSync("/home/jsh/workspace/w10/temp/USB/STORAGE/example3.hc")
+    let action = getCourseLoaderInstance().createActions(data.toString())
+    console.log(action)
+    
     ipcMain.on(WorkerCH.startRM,(event:IpcMainEvent,path:string)=>{
         try {
             let nameArr = path.split('/')

@@ -1,5 +1,5 @@
 Example Course valve
 Wait 500
-GPIOEnable valve true
+GPIOWrite valve true
 Wait 5000
-GPIOEnable valve false
+GPIOWrite valve false

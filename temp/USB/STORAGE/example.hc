@@ -1,7 +1,6 @@
 Example Course1111111111
 Wait 1000
-GPIOEnable propeller false
-PWMEnable propeller true
+GPIOWrite propeller false
 Wait 1000
 PWMSetDuty pump 0.5
 Wait 1000
