@@ -1,21 +1,17 @@
 {
   "main": "build/electron/main.js",
   "homepage": ".",
-  "description": "print fw hix",
+  "description": "washer hix",
   "author": "JSH",
   "nodeGypRebuild": true,
-  "name": "w10",
-  "version": "0.1.0",
-  "private": true,
   "build": {
     "extends": null,
+    "files": [
+      "build/**/*"
+    ],
     "directories": {
       "buildResources": "assets"
     },
-    "files": [
-      "build/**/*",
-      "node_modules/**/*"
-    ],
     "linux": {
       "target": [
         {
@@ -28,37 +24,60 @@
       ]
     }
   },
+  "name": "waser",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
+    "@serialport/bindings-cpp": "^10.7.0",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.0",
+    "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
+    "@types/bindings": "^1.5.1",
+    "@types/classnames": "^2.3.1",
+    "@types/electron-devtools-installer": "^2.2.2",
     "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
-    "@types/react": "^18.0.0",
+    "@types/node-sass": "^4.11.2",
+    "@types/react": "^17.0.20",
     "@types/react-circular-progressbar": "^1.1.0",
-    "@types/react-dom": "^18.0.0",
+    "@types/react-dom": "^17.0.9",
     "@types/react-modal": "^3.13.1",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-scroll": "^1.8.3",
+    "@types/request": "^2.48.8",
+    "@types/request-promise": "^4.1.48",
+    "@types/serialport": "^8.0.2",
     "@types/styled-components": "^5.1.25",
-    "class-names": "^1.0.0",
+    "@types/uuid": "^8.3.4",
+    "address": "^1.2.0",
+    "asar": "^3.1.0",
+    "bindings": "^1.5.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^2.0.0",
     "electron-reload": "^2.0.0-alpha.1",
+    "global": "^4.4.0",
+    "image-size": "^1.0.2",
     "js-base64": "^3.7.2",
     "node-addon-api": "^5.0.0",
-    "react": "^18.2.0",
-    "react-circular-progressbar": "^2.1.0",
-    "react-dom": "^18.2.0",
+    "node-gyp-build": "^4.4.0",
+    "react": "^18.1.0",
+    "react-circular-progressbar": "^2.0.4",
+    "react-device-detect": "^2.2.2",
+    "react-dom": "^18.1.0",
     "react-modal": "^3.15.1",
-    "react-router-dom": "^6.4.1",
-    "react-scripts": "5.0.1",
+    "react-router-dom": "^6.2.2",
+    "react-scripts": "^5.0.1",
     "react-scroll": "^1.8.7",
+    "react-simple-keyboard": "^3.4.187",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "sass": "^1.55.0",
-    "styled-components": "^5.3.6",
+    "serialport": "^10.4.0",
+    "styled-components": "^5.3.5",
     "ts-stopwatch": "^0.0.4",
     "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0"
+    "uuid": "^8.3.2",
+    "web-vitals": "^2.1.0",
+    "ws": "^8.9.0"
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",
@@ -79,7 +98,8 @@
     "addon:arm": "cross-env AR=arm-linux-gnueabihf-ar LINK=arm-linux-gnueabihf-g++ CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ node-gyp configure --arch=arm build --release --build-dir=build-addon",
     "addon:clean": "node-gyp clean",
     "addon:build": "node-gyp clean configure build --release",
-    "addon:build:dev": "node-gyp clean configure build --debug"
+    "addon:build:dev": "node-gyp clean configure build --debug",
+    "hixImageViewer:build": "cmake -H. -Bhix-image-viewer/build -G \"Unix Makefiles\" ./hix-image-viewer && cmake --build ./hix-image-viewer/build"
   },
   "eslintConfig": {
     "extends": [
@@ -100,11 +120,12 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^18.7.23",
     "concurrently": "^7.1.0",
     "cross-env": "^7.0.3",
     "electron": "^18.1.0",
     "electron-builder": "^23.0.3",
-    "node-gyp": "^9.1.0",
+    "node-gyp": "^9.0.0",
     "sass-loader": "^12.6.0",
     "wait-on": "^6.0.1"
   }

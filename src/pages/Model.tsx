@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import Button from '../components/Button';
 
+import ImageButton from '../components/ImageButton';
 import {SelectList, SelectListModel} from '../components/SelectList';
 
 import Footer from '../layout/Footer';
@@ -72,7 +73,7 @@ function Model(){
     return (
         <div>
             <Header>
-                Select a file to wash
+                Select a file to print
             </Header>
             <MainArea>
                 <ParentArea>

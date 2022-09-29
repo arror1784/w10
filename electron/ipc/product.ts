@@ -6,7 +6,6 @@ import { getModelNoInstaceSetting } from "../json/modelNo";
 import { getPrinterSetting } from "../json/printerSetting";
 import { getVersionSetting } from "../json/version";
 import { ProductCH } from "./cmdChannels";
-import { getWifiName } from "./wifiControl";
 
 export function productIpcInit(mainWindow:BrowserWindow){
 
@@ -24,7 +23,7 @@ export function productIpcInit(mainWindow:BrowserWindow){
                 continue    
             results.push(address.ip(name));
         }
-        return [getVersionSetting().data.version,getModelNoInstaceSetting().data.modelNo,getWifiName(),...results]
+        return [getVersionSetting().data.version,getModelNoInstaceSetting().data.modelNo,"",...results]
     })
     ipcMain.handle(ProductCH.getOffsetSettingsTW,()=>{
 

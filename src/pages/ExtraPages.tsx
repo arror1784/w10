@@ -9,8 +9,6 @@ function ExtraPages(){
 
     const navigate = useNavigate()
 
-    const [shutDownVisible, setshutDownVisible] = useState<boolean>(false)
-
     useEffect(()=>{
         const workingStateListener = window.electronAPI.onWorkingStateChangedMR((event:IpcRendererEvent,state:string,message?:string)=>{
             switch(state){
@@ -27,7 +25,7 @@ function ExtraPages(){
     },[])
 
     return (<div>
-        
+
     </div>);
 }
 export default ExtraPages

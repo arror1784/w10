@@ -16,33 +16,6 @@ enum FileSystemCH{
     getUSBPathTW = "FileSystemCH    :getUSBPathTW",
 
 }
-
-enum ResinCH{
-    resinListTW = "resin:resinList,RT:string[]",
-
-}
-enum UpdateCH{
-
-    getSWCurrentVersionTW = "update:getSWCurrentVersionTW",
-    getSWServerVersionTW = "update:getSWServerVersionTW",
-    getSWFileVersionTW = "update:getSWFileVersionTW",
-    
-    softwareUpdateRM = "update:softwareUpdate",
-    softwareFileUpdateRM = "update:softwareFileUpdate",
-    
-    getResinCurrentVersion = "update:getResinCurrentVersion,RT:string",
-    getResinServerVersion = "update:getResinServerVersion",
-    getResinFileVersion = "update:getResinFileVersion",
-
-    resinUpdateRM = "update:resinUpdateRM",
-    resinFileUpdateRM = "pdate:resinFileUpdateRM",
-
-
-    factoryRestRM = "update:factoryResetRM",
-
-    onUpdateNoticeMR = "update:onResinUpdateNoticeMR"
-
-}
 enum ProductCH{
     getOffsetSettingsTW = "product:getOffsetSettings,RT:string[]",
     getProductInfoTW = "product:getProductInfo,RT:string[]",
@@ -70,21 +43,4 @@ enum WorkerCH{
     onProgressMR = "worker:onProgress,progress:number",
     onSetTotalTimeMR = "worker:onSetTotalTimeMR",
 }
-enum ImageCH{
-    changeImageMR = 'image:changeImage,image:string',
-    changeScaleMR = "image:changeScale,scale:number"
-}
-enum WifiCH{
-    connectWifiRM = 'wifi:connectWifi,ssid:string,bssid:string,passwd:string|null',
-    disconnectWifiRM = 'wifi:disconnectWifiRM',
-    scanWifiRM = 'wifi:scanWifiRM',
-
-    getWifiListTW = 'wifi:getWifiListTW',
-    getCurrentWifiStatusTW = 'wifi:getCurrentWifiStatusTW',
-
-    onStatusChangeMR = 'wifi:onStatusChangeMR',
-    onWifiListChangeMR = 'wifi:onWifiListChangeMR',
-    onWifiNoticeMR = 'wifi:onWifiNoticeMR',
-
-}
-export { FileSystemCH,WorkerCH,ProductCH,ResinCH,ImageCH,WifiCH,UpdateCH }
+export { FileSystemCH,WorkerCH,ProductCH,}

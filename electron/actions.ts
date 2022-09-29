@@ -1,4 +1,3 @@
-import {UartConnection} from './uartConnection';
 
 type actionType = "movePosition" | "moveLength" | "ledEnable" | "ledToggle" | "wait" | "setImage" | "autoHome" | "checkTime" | "processImage";
 const enum moveType{

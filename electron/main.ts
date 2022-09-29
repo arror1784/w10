@@ -1,9 +1,12 @@
 import {app, BrowserWindow, Menu, screen, session} from 'electron';
 
-import isDev from 'electron-is-dev';
-
 import path from 'path';
 import url from 'url';
+import isDev from 'electron-is-dev';
+
+import { ipcHandle } from './ipc/ipc';
+import { mainProsessing } from './mainProsess';
+
 function createWindow() {
     /*
     * 넓이 1920에 높이 1080의 FHD 풀스크린 앱을 실행시킵니다.
@@ -20,7 +23,7 @@ function createWindow() {
         },
         // disableAutoHideCursor: true
     });
-
+    
     const template : Array<(Electron.MenuItem)> = []; 
     const menu = Menu.buildFromTemplate(template); 
     Menu.setApplicationMenu(menu);
@@ -36,7 +39,7 @@ function createWindow() {
         pathname: path.join(__dirname, '/../index.html'),
         protocol: 'file:',
         slashes: true
-    });
+    }); 
     /*
     * startUrl에 배정되는 url을 맨 위에서 생성한 BrowserWindow에서 실행시킵니다.
     * */
@@ -63,8 +66,10 @@ function createWindow() {
 
         });
     }
+    // mainProsessing(mainWin)
 }
 
 app.whenReady().then(() => {
+    // ipcHandle()
     createWindow()
 })

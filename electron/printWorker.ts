@@ -1,10 +1,9 @@
 import { LEDEnable,MoveLength,MovePosition,Wait,actionType, Action, AutoHome, SetImage, CheckTime, LEDToggle, ProcessImage } from './actions'
 import { getPrinterSetting } from './json/printerSetting'
-import { ResinSetting, ResinSettingValue } from './json/resin';
-import { InfoSetting, InfoSettingValue } from './json/infoSetting';
-import { Stopwatch } from 'ts-stopwatch';
+import { Stopwatch } from 'ts-stopwatch'
 
 import * as fs from 'fs'
+
 import { getProductSetting } from './json/productSetting';
 
 
@@ -34,6 +33,7 @@ class PrintWorker{
     private _currentStep: number = 0
     private _workingState: WorkingState = WorkingState.stop
     private _progress : number = 0
+    private _lcdState : boolean = true
     private _printingErrorMessage : string = ""
     private _stopwatch : Stopwatch = new Stopwatch()
     private _curingStopwatch : Stopwatch = new Stopwatch()
@@ -43,8 +43,13 @@ class PrintWorker{
     private _onWorkingStateChangedCallback?: (state : WorkingState,message?:string) => void
     private _onSetTotaltime?: (value : number) => void
     
-    print(material:string,path:string,name:string){
-
+    constructor(){
+    }
+    getPrintInfo(){ //[state,resinname,filename,layerheight,elapsedtime,totaltime,progress]
+        return []
+    }
+    
+    print(){
         this.run()
     }
     
@@ -53,11 +58,11 @@ class PrintWorker{
 
         return true
     }
-    createActions(resinSetting : ResinSettingValue,infoSetting : InfoSettingValue) {
+    createActions() {
 
         this._actions = []
 
-            this._actions.push(new Wait(1000))
+        this._actions.push(new Wait(1000))
     }
     pause(){
         this._workingState = WorkingState.pauseWork
@@ -79,7 +84,7 @@ class PrintWorker{
 
         this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
     }
-    printAgain(resin?:ResinSetting){
+    printAgain(){
         this.run()
     }
     async process(){
@@ -88,7 +93,11 @@ class PrintWorker{
 
             if(this._currentStep == this._actions.length)
                 this.stop()
-
+            
+            if(!this._lcdState){
+                this._workingState = WorkingState.error
+                this._printingErrorMessage = "Error: LCD가 빠졌습니다."
+            }
             switch (this._workingState) {
                 case WorkingState.pauseWork:
                     this._workingState = WorkingState.pause
@@ -110,10 +119,8 @@ class PrintWorker{
             this._onProgressCallback && this._onProgressCallback(this._progress)
 
             const action = this._actions[this._currentStep]
-            console.log("PROCESS WHILE",this._currentStep,action.type)
             switch (action.type) {
                 case "autoHome":
-
                     break;
                 case "ledEnable":
                     break;
@@ -124,6 +131,7 @@ class PrintWorker{
                 case "movePosition":
                     break;
                 case "wait":
+                     await new Promise(resolve => setTimeout(resolve, (action as Wait).msec));
                     break;
                 case "processImage":
                     break;
@@ -131,6 +139,15 @@ class PrintWorker{
                     break;
                 case "checkTime":
                     switch ((action as CheckTime).checkTimeType) {
+                        case 'start':
+                            this._curingStopwatch.start()
+                            break;
+                        case 'finish':
+                            this._curingStopwatch.stop()
+                            this._onSetTotaltime && this._onSetTotaltime(this._totalTime)
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 default:
@@ -156,7 +173,6 @@ class PrintWorker{
 
 function checktime(){
     let a = new Date(Date.now())
-    console.log(a.getSeconds(),a.getMilliseconds())
 }
 
 

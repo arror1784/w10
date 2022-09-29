@@ -57,3 +57,7 @@ sketch
 # Ignore all local history of files
 .history
 .ionide
+
+/dist
+
+temp/print/printFilePath/*

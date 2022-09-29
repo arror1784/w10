@@ -1,29 +1,20 @@
 
 import { BrowserWindow, ipcMain, IpcMainEvent } from "electron"
-import { MoveMotorCommand, PrintWorker, WorkingState } from "./printWorker"
-import { ImageCH, ProductCH, UpdateCH, WorkerCH } from './ipc/cmdChannels'
-
-import fs from "fs"
-import { ResinSetting } from "./json/resin"
-import { getProductSetting } from "./json/productSetting"
-import { wifiInit } from "./ipc/wifiControl"
-
-import { getPrinterSetting } from "./json/printerSetting"
-
-import { WebSocketMessage } from "./json/webSockectMessage"
+import { ProductCH, WorkerCH } from './ipc/cmdChannels'
 import { productIpcInit } from "./ipc/product"
-const sliceFileRoot : string = process.platform === "win32" ? process.cwd() + "/temp/print/printFilePath/" : "/opt/capsuleFW/print/printFilePath/"
+
+import { PrintWorker, WorkingState } from "./printWorker"
 
 let worker = new PrintWorker()
-
 async function mainProsessing(mainWindow:BrowserWindow){
     ipcMain.on(WorkerCH.startRM,(event:IpcMainEvent,path:string,material:string)=>{
         try {
             let nameArr = path.split('/')
             let name = nameArr[nameArr.length - 1]
-            worker.print(material,path,name)
+            worker.print()
 
         } catch (error) {
+            
             mainWindow.webContents.send(WorkerCH.onStartErrorMR,(error as Error).message)
             console.log((error as Error).message)
         }
@@ -55,8 +46,9 @@ async function mainProsessing(mainWindow:BrowserWindow){
                 break;
         }
     })
+    ipcMain.on(WorkerCH.requestPrintInfoRM,(event:IpcMainEvent)=>{
+        mainWindow.webContents.send(WorkerCH.onPrintInfoMR,...worker.getPrintInfo())
+    })
     productIpcInit(mainWindow)
-    wifiInit(mainWindow)
-    // updateIpcInit(mainWindow)
 }
 export {mainProsessing}

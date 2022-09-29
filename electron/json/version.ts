@@ -1,6 +1,5 @@
 import { JsonSetting } from "./json";
 import { existsSync } from "fs";
-import { json } from "node:stream/consumers";
 
 interface VersionValue{
     version: string;
