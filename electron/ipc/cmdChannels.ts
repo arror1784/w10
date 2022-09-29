@@ -11,30 +11,17 @@ import { type } from "os";
 
 enum FileSystemCH{
     readDirTW = "FileSystem:readDir,RT:DirOrFile[]",
-    getLayerHeightTW = "FileSystem:getLayerHeight,filePath:string",
     isCustomTW = "Filesystem:getLayerHeightTW,filePath:string",
     getUSBPathTW = "FileSystemCH:getUSBPathTW",
 
 }
 enum ProductCH{
-    getOffsetSettingsTW = "product:getOffsetSettings,RT:string[]",
     getProductInfoTW = "product:getProductInfo,RT:string[]",
-    getUartConnectionErrorTW = "product:getUartConnectionErrorTW",
-
-    onLCDStateChangedMR = "product:onLCDStateChanged,state:boolean",
-    onShutDownEventMR = "product:onShutDownEvent",
-    onMoveFinishMR = "product:onMoveFinishMR",
-
-    shutDownRM = "product:onShutDown",
-    saveLEDOffsetRM = "product:saveLEDOffsetRM,int",
-    saveHeightOffsetRM = "product:saveHeightOffsetRM",
-    moveMotorRM = "product:moveBedHeightRM,command:string,value:number",
 }
 
 enum WorkerCH{
-    startRM = "worker:start,path:string,material:string",
+    startRM = "worker:start,path:string",
     commandRM = "worker:command,cmd:string",
-    unlockRM = "worker:unlock",
     
     requestPrintInfoRM = "worker:requestPrintInfo,RT:[state,resinname,filename,layerheight,elapsedtime,totaltime,progress]",
     onWorkingStateChangedMR = "worker:onWorkingStateChanged,state:string,message:string",

@@ -5,7 +5,6 @@ import './App.css';
 import './routes'
 import AppRoute from './routes';
 import { HashRouter } from 'react-router-dom'
-import Typing from './layout/Typing';
 import ExtraPages from './pages/ExtraPages';
 
 function App() {
@@ -23,7 +22,6 @@ function App() {
           <HashRouter>
             <AppRoute></AppRoute>
             <ExtraPages></ExtraPages>
-            <Typing onTypingFinish={()=>{}}></Typing>
           </HashRouter>
         </div>
       </header>

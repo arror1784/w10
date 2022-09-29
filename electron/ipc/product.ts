@@ -8,10 +8,6 @@ import { ProductCH } from "./cmdChannels";
 
 export function productIpcInit(mainWindow:BrowserWindow){
 
-    ipcMain.on(ProductCH.shutDownRM,(event:IpcMainEvent)=>{
-        exec("echo rasp | sudo -S shutdown -h now",(error, stdout, stderr) => {
-            console.log("shutdown -h now")})
-    })
     // ipcMain.handle(ProductCH.getProductInfoTW,()=>{
 
     //     const nets = networkInterfaces();

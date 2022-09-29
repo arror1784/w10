@@ -33,11 +33,8 @@ function eventRemove(listener:EventListener){
 
 interface electronApiInterface {
     readDirTW: (path : string) => Promise<DirOrFile[]>;
-    getLayerHeightTW: (filePath:string) => Promise<number>;
-    getOffsetSettingsTW: () => Promise<number[]>;
     isCustomTW: (filePath:string) => Promise<boolean>;
     getProductInfoTW: () => Promise<string[]>; // 0:version,1:serial,2:wifi,3:ip,
-    getUartConnectionErrorTW: ()=>Promise<boolean>;
     getUSBPathTW:()=>Promise<string>;
     
     printStartRM: (path : string) => void;
@@ -58,11 +55,8 @@ interface electronApiInterface {
 }
 const exposedApi: electronApiInterface = {
     readDirTW: (path: string) => ipcRenderer.invoke(FileSystemCH.readDirTW,path),
-    getLayerHeightTW: (filePath:string) => ipcRenderer.invoke(FileSystemCH.getLayerHeightTW,filePath),
-    getOffsetSettingsTW: () => ipcRenderer.invoke(ProductCH.getOffsetSettingsTW),
     isCustomTW: (filePath:string) => ipcRenderer.invoke(FileSystemCH.isCustomTW,filePath),
     getProductInfoTW: () => ipcRenderer.invoke(ProductCH.getProductInfoTW),
-    getUartConnectionErrorTW: ()=>ipcRenderer.invoke(ProductCH.getUartConnectionErrorTW),
     getUSBPathTW:()=>ipcRenderer.invoke(FileSystemCH.getUSBPathTW),
 
     printStartRM: (path : string) => ipcRenderer.send(WorkerCH.startRM,path),
