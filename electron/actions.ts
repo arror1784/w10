@@ -120,7 +120,7 @@ class PWMLinearAccel extends GPIOAction{
         let accel : number = 0
         let timeSteps : number = Math.ceil((this.duration / this.resolution))
         
-        accel = this.accelDuty * this.resolution
+        accel = (this.accelDuty / 1000) * this.resolution
         speed = this.beginSpeed
 
         actions.push(new PWMSetDuty(this.pin,speed))
