@@ -24,17 +24,15 @@ function Complete(){
     const [isError, setIsError] = useState<boolean>(false);
     const [errorModalVisible, seterrorModalVisible] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
-    const [filename, setFilename] = useState<string>("helll world");
+    const [name, setName] = useState<string>("helll world");
     const [spentTime, setSpentTime] = useState<string>("Calculating");
-    const [resin, setResin] = useState<string>("none");
 
     const { totalElapsedTime,error } = useParams()
 
     useEffect(()=>{
-        const printInfoListener = window.electronAPI.onPrintInfoMR((event:IpcRendererEvent,state:string,material:string,filename:string,layerHeight:number
-            ,elaspsedTime:number,totalTime:number,progress:number)=>{
-            setFilename(filename)
-            setResin(material)
+        const printInfoListener = window.electronAPI.onPrintInfoMR((event:IpcRendererEvent,state: string, name: string, 
+            totalTime: number,progress : number)=>{
+            setName(name)
             if(state === "error")
                 setIsError(true)
         })
@@ -69,10 +67,8 @@ function Complete(){
             <InfoArea>
                 <InfoText>File Name</InfoText>
                 <InfoValue>
-                    <SlideText text={filename}/>
+                    <SlideText text={name}/>
                 </InfoValue>
-                <InfoText>Material</InfoText>
-                <InfoValue>{resin}</InfoValue>
                 <InfoText>Time Spent</InfoText>
                 <InfoValue>{spentTime}</InfoValue>
             </InfoArea>

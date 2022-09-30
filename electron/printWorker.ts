@@ -23,6 +23,7 @@ enum MoveMotorCommand{
     MoveMicro="MoveMicro",
     MoveMaxHeight="MoveMaxHeight",
 }
+
 class printWorkerInterface{
 
     protected _actions: Array<Action> = new Array<Action>(10000);
@@ -42,6 +43,9 @@ class printWorkerInterface{
     constructor(){
     }
     
+    getPrintInfo(){ //[state,resinname,filename,layerheight,elapsedtime,totaltime,progress]
+        return[this._workingState,this._name,this._totalTime,this._progress]
+    }
     run(path:string,name:string){
 
         this._currentStep = 0
@@ -54,6 +58,8 @@ class printWorkerInterface{
             this.process()
             return
         }
+        this._name = name
+
         this.createActions(path)
         this._workingState = WorkingState.working
         this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
@@ -102,6 +108,11 @@ class printWorkerInterface{
                     this._stopwatch.stop()
                     this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
                     return;
+                case WorkingState.stopWork:
+                    this._workingState = WorkingState.stop
+                    this._stopwatch.stop()
+                    this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
+                    return;
                 case WorkingState.error:
                     this.stop()
                     return;
@@ -112,6 +123,7 @@ class printWorkerInterface{
             this._onProgressCallback && this._onProgressCallback(this._progress)
 
             const action = this._actions[this._currentStep]
+            console.log(action)
             switch (action.type) {
                 case "GPIOWrite":
                     break;
@@ -142,8 +154,8 @@ class printWorkerInterface{
 }
 class PrintWorker extends printWorkerInterface{
 
-    protected _gpioMap = new Map<GPIOPin,Gpio>()
-    protected _pwmMap = new Map<GPIOPin,Gpio>()
+    private _gpioMap = new Map<GPIOPin,Gpio>()
+    private _pwmMap = new Map<GPIOPin,Gpio>()
 
     constructor(){
         super()
@@ -192,6 +204,8 @@ class PrintWorker extends printWorkerInterface{
             this._onProgressCallback && this._onProgressCallback(this._progress)
 
             const action = this._actions[this._currentStep]
+            console.log(action)
+
             switch (action.type) {
                 case "GPIOWrite":
                     let gpioEnable = (action as GPIOWrite)
@@ -226,10 +240,10 @@ class PrintWorker extends printWorkerInterface{
         this._gpioMap.get(GPIOPin.valve)?.digitalWrite(0)
         
         this._pwmMap.get(GPIOPin.pump)?.pwmWrite(0)
-        this._pwmMap.get(GPIOPin.pump)?.pwmRange(25)
+        this._pwmMap.get(GPIOPin.pump)?.pwmRange(100)
 
         this._pwmMap.get(GPIOPin.propeller)?.pwmWrite(0)
-        this._pwmMap.get(GPIOPin.pump)?.pwmRange(25)
+        this._pwmMap.get(GPIOPin.pump)?.pwmRange(100)
 
     }
     checkPins(){

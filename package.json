@@ -3,11 +3,15 @@
   "homepage": ".",
   "description": "washer hix",
   "author": "JSH",
-  "nodeGypRebuild": true,
   "build": {
     "extends": null,
     "files": [
-      "build/**/*"
+      "build/**/*",
+      {
+        "from": "prebuilds",
+        "to": "Release",
+        "filter": "*.node"
+      }
     ],
     "directories": {
       "buildResources": "assets"
@@ -17,14 +21,13 @@
         {
           "target": "AppImage",
           "arch": [
-            "armv7l",
-            "x64"
+            "armv7l"
           ]
         }
       ]
     }
   },
-  "name": "waser",
+  "name": "w10",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

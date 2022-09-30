@@ -104,7 +104,7 @@ function Course(){
             <Footer>
                 <Button color='gray' type='small' onClick={() => {navigate(-1)}}>Back</Button>
                 <Button color='blue' type='small' onClick={() => {
-                    window.electronAPI.printStartRM(selectFile.path)
+                    window.electronAPI.washStartRM(selectFile.path)
                 }}>Select</Button>
             </Footer>
             

@@ -8,16 +8,11 @@ import { ProductCH } from "./cmdChannels";
 
 export function productIpcInit(mainWindow:BrowserWindow){
 
-    // ipcMain.handle(ProductCH.getProductInfoTW,()=>{
+    ipcMain.handle(ProductCH.getProductInfoTW,()=>{
 
-    //     const nets = networkInterfaces();
-    //     const results : string[] = [] // Or just '{}', an empty object
+        const nets = networkInterfaces();
+        const results : string[] = [] // Or just '{}', an empty object
         
-    //     for (const name of Object.keys(nets)) {
-    //         if(name == 'lo')
-    //             continue    
-    //         results.push(address.ip(name));
-    //     }
-    //     return [getVersionSetting().data.version,getModelNoInstaceSetting().data.modelNo,"",...results]
-    // })
+        return [getVersionSetting().data.version,getModelNoInstaceSetting().data.modelNo]
+    })
 }

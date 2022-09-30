@@ -20,19 +20,11 @@ function Home(){
     
     
     useEffect(() => {
-        // window.electronAPI.getProductInfoTW().then(
-        //     (value : string[]) => { //0:version,1:serial,2:wifi,3:ip,
-        //         setVersion(value[0])
-        //         setSerial(value[1])
-        //         setWifi(value[2])
-        //         if(value.length > 3){
-        //             let a : string[] = []
-        //             for (let i = 3; i < value.length; i++) {
-        //                 a.push(value[i])
-        //             }
-        //             setIp(a)
-        //         }
-        //     })
+        window.electronAPI.getProductInfoTW().then(
+            (value : string[]) => { //0:version, 1:serial
+                setVersion(value[0])
+                setSerial(value[1])
+            })
     }, [modalVisible])
     
     return (
@@ -48,16 +40,6 @@ function Home(){
                 <ValueText> {version} </ValueText>
                 <TitleText> Serial</TitleText>
                 <ValueText> {serial} </ValueText>
-                <TitleText> WiFi </TitleText>
-                <ValueText> {wifi} </ValueText>
-                <TitleText> IP </TitleText>
-                <div>
-                {
-                    ip.length != 0 && ip.map((value:string,index:number)=>{
-                        return (<ValueText> {value} </ValueText>)
-                    })
-                }
-                </div>
             </InfoArea>
         </Modal>
     </HomeArea>);

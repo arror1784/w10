@@ -19,7 +19,8 @@ async function mainProsessing(mainWindow:BrowserWindow){
 
     let data = fs.readFileSync("/home/jsh/workspace/w10/temp/USB/STORAGE/example3.hc")
     let action = getCourseLoaderInstance().createActions(data.toString())
-    console.log(action)
+    // console.log(action)
+    // console.log(getCourseLoaderInstance().getDuration())
     
     ipcMain.on(WorkerCH.startRM,(event:IpcMainEvent,path:string)=>{
         try {
@@ -58,7 +59,7 @@ async function mainProsessing(mainWindow:BrowserWindow){
         }
     })
     ipcMain.on(WorkerCH.requestPrintInfoRM,(event:IpcMainEvent)=>{
-        mainWindow.webContents.send(WorkerCH.onPrintInfoMR)
+        mainWindow.webContents.send(WorkerCH.onPrintInfoMR,...worker.getPrintInfo())
     })
     productIpcInit(mainWindow)
 }

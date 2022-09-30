@@ -24,9 +24,7 @@ function Progress(){
     const navigate = useNavigate()
 
     const [progressValue, setProgressValue] = useState<number>(45)
-    const [filename, setFilename] = useState<string>("")
-    const [material, setMaterial] = useState<string>("")
-    const [layerHeight, setLayerHeight] = useState<number>(0.1)
+    const [name, setName] = useState<string>("")
     const [totalTime, setTotalTime] = useState(0)
 
     const [infoModalVisible,setInfoModalVisible] = useState<boolean>(false)
@@ -46,11 +44,9 @@ function Progress(){
             console.log(value)
             setTotalTime(value)
         })
-        const printerInfoListener = window.electronAPI.onPrintInfoMR((event:IpcRendererEvent,state:string,material:string,filename:string,layerHeight:number
-            ,elaspsedTime:number,totalTime:number,progress:number)=>{
-            setFilename(filename)
-            setMaterial(material)
-            setLayerHeight(layerHeight)
+        const printerInfoListener = window.electronAPI.onPrintInfoMR((event:IpcRendererEvent,state: string, name: string, 
+            totalTime: number,progress : number)=>{
+            setName(name)
             setTotalTime(totalTime)
         })
         const workingStateListener = window.electronAPI.onWorkingStateChangedMR((event:IpcRendererEvent,state:string,message?:string)=>{
@@ -121,7 +117,7 @@ function Progress(){
                         File name
                     </TitleText>
                     <ValueText>
-                        <SlideText text={filename}/>
+                        <SlideText text={name}/>
                     </ValueText>
                     <TitleText>
                         Remaining time
@@ -152,21 +148,11 @@ function Progress(){
                 </CircularProgressArea>
             </MainArea>
             <Footer>
-                <Button color='gray' type='small' onClick={() => {setInfoModalVisible(true)}}> Print Info </Button>
+                <Button color='gray' type='small' visible={false} onClick={() => {setInfoModalVisible(true)}}> Print Info </Button>
                 <Button color='blue' type='small' 
                 onClick={() => {
                     window.electronAPI.printCommandRM("pause")}}> Quit </Button> 
             </Footer>
-            <Modal selectVisible={false} visible={infoModalVisible} onBackClicked={() => setInfoModalVisible(false)}>
-                <ModalInfoMainArea>
-                    <ModalInfoTitle text="File Name"/>
-                    <ModalInfoValue text={filename}/>
-                    <ModalInfoTitle text='Material'/>
-                    <ModalInfoValue text={material}/>
-                    <ModalInfoTitle text='Layer Height'/>
-                    <ModalInfoValue text={`${layerHeight}mm/layer`}/>
-                </ModalInfoMainArea>
-            </Modal>
             <Modal visible={quitModalVisible} btnEnable={quitModalBtnEnable} selectString="Quit" backString="Resume"
                 onBackClicked={() => window.electronAPI.printCommandRM("resume")}
                 onSelectClicked={() => window.electronAPI.printCommandRM("quit")}

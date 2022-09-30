@@ -37,13 +37,13 @@ interface electronApiInterface {
     getProductInfoTW: () => Promise<string[]>; // 0:version,1:serial,2:wifi,3:ip,
     getUSBPathTW:()=>Promise<string>;
     
-    printStartRM: (path : string) => void;
+    washStartRM: (path : string) => void;
     printCommandRM: (cmd :string) => void;
     requestPrintInfoRM: () => void;
     factoryRestRM:()=>void;
     
     onWorkingStateChangedMR: (callback:(event:IpcRendererEvent,state: string,message?:string) => void) => EventListener;
-    onPrintInfoMR: (callback:(event:IpcRendererEvent,state: string, name: string, elapsedTime: number, 
+    onPrintInfoMR: (callback:(event:IpcRendererEvent,state: string, name: string, 
                                 totalTime: number,progress : number) => void) => EventListener;
     onStartErrorMR: (callback:(event:IpcRendererEvent,error: string) => void) => EventListener;
     onProgressMR: (callback:(event:IpcRendererEvent,progress: number) => void) => EventListener;
@@ -59,7 +59,7 @@ const exposedApi: electronApiInterface = {
     getProductInfoTW: () => ipcRenderer.invoke(ProductCH.getProductInfoTW),
     getUSBPathTW:()=>ipcRenderer.invoke(FileSystemCH.getUSBPathTW),
 
-    printStartRM: (path : string) => ipcRenderer.send(WorkerCH.startRM,path),
+    washStartRM: (path : string) => ipcRenderer.send(WorkerCH.startRM,path),
     printCommandRM: (cmd :string) => ipcRenderer.send(WorkerCH.commandRM,cmd),
     requestPrintInfoRM: () => ipcRenderer.send(WorkerCH.requestPrintInfoRM),
     factoryRestRM:()=>ipcRenderer.send(FactoryResetCH.FactoryReset),
