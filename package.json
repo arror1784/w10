@@ -12,7 +12,6 @@
         "to": "Release",
         "filter": "*.node"
       }
-      ,"!node_modules/pigpio/build/Release/*.node"
     ],
     "directories": {
       "buildResources": "assets"
