@@ -1,19 +1,18 @@
 
 import { BrowserWindow, ipcMain, IpcMainEvent } from "electron"
 import { arch } from "process"
-import { getCourseLoaderInstance } from "./courseLoader"
 import { ProductCH, WorkerCH } from './ipc/cmdChannels'
 import { productIpcInit } from "./ipc/product"
 
 import { PrintWorker, printWorkerInterface, WorkingState } from "./printWorker"
 
-import fs from 'fs'
 
 let worker : printWorkerInterface | PrintWorker
 if(arch == "arm")
     worker = new PrintWorker()
 else
     worker = new printWorkerInterface()
+
 
 async function mainProsessing(mainWindow:BrowserWindow){
 

@@ -18,8 +18,8 @@ class CourseLoader{
         for (const i of strArr) {
             const parsingStr = i.split(' ')
             switch (parsingStr[0] as actionType) {
-                case "GPIOWrite": // GPIOEnable {GPIOPin} {boolean}
-                    this._actions.push(new GPIOWrite(nameToPin(parsingStr[1]),parsingStr[2] == "true" ? 1 : 0))
+                case "GPIOWrite": // GPIOWrite {GPIOPin} {boolean}
+                    this._actions.push(new GPIOWrite(nameToPin(parsingStr[1]),parsingStr[2].toLowerCase() == "true" ? 1 : 0))
                     break;
                 case "PWMAction": //
                     break;
@@ -37,7 +37,7 @@ class CourseLoader{
                     this._actions.push(new PWMSetPeriod(nameToPin(parsingStr[1]),Number(parsingStr[2])))
 
                     break;
-                case "Wait": // Wait {time:milli}
+                case "Wait": //     
                     this._actions.push(new Wait(Number(parsingStr[1])))
                     this._duration = this._duration + Number(parsingStr[1])
                     break;

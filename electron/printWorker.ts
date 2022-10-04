@@ -11,7 +11,6 @@ import fs from 'fs'
 enum WorkingState{
     working = "working",
     stop = "stop",
-    stopWork = "stopWork",
     pause = "pause",
     pauseWork = "pauseWork",
     error = "error"
@@ -84,13 +83,7 @@ class printWorkerInterface{
         this.process()
     }
     async stop(){
-        const prevState = this._workingState
-        this._workingState = WorkingState.stopWork
-
-        if(prevState != WorkingState.working && prevState != WorkingState.pauseWork){
-            this.process()
-        }
-        this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
+        this._workingState = WorkingState.stop
     }
     printAgain(){
         this.run("","")
@@ -108,8 +101,7 @@ class printWorkerInterface{
                     this._stopwatch.stop()
                     this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
                     return;
-                case WorkingState.stopWork:
-                    this._workingState = WorkingState.stop
+                case WorkingState.stop:
                     this._stopwatch.stop()
                     this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
                     return;
@@ -167,8 +159,8 @@ class PrintWorker extends printWorkerInterface{
         this._gpioMap.set(GPIOPin.pump2,new Gpio(GPIOPin.pump2,{mode:Gpio.OUTPUT}))
         this._gpioMap.set(GPIOPin.valve,new Gpio(GPIOPin.valve,{mode:Gpio.OUTPUT}))
 
-        this._pwmMap.set(GPIOPin.valve,new Gpio(GPIOPin.pump,{mode:Gpio.OUTPUT}))
-        this._pwmMap.set(GPIOPin.valve,new Gpio(GPIOPin.propeller,{mode:Gpio.OUTPUT}))
+        this._pwmMap.set(GPIOPin.valve,new Gpio(GPIOPin.pump,{mode:Gpio.ALT0}))
+        this._pwmMap.set(GPIOPin.valve,new Gpio(GPIOPin.propeller,{mode:Gpio.ALT0}))
 
     }
     async process(){
@@ -186,13 +178,11 @@ class PrintWorker extends printWorkerInterface{
                         this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
                         return;
                     }
-                case WorkingState.stopWork:
-                    if(this.checkPins()){
-                        this._workingState = WorkingState.stop
-                        this._stopwatch.stop()
-                        this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
-                        return;
-                    }
+                    break;
+                case WorkingState.stop:
+                    this._stopwatch.stop()
+                    this._onWorkingStateChangedCallback && this._onWorkingStateChangedCallback(this._workingState)
+                    this.initGPIO()
                     return;
                 case WorkingState.error:
                     this.stop()
@@ -240,10 +230,10 @@ class PrintWorker extends printWorkerInterface{
         this._gpioMap.get(GPIOPin.valve)?.digitalWrite(0)
         
         this._pwmMap.get(GPIOPin.pump)?.pwmWrite(0)
-        this._pwmMap.get(GPIOPin.pump)?.pwmRange(100)
+        this._pwmMap.get(GPIOPin.pump)?.pwmRange(255)
 
         this._pwmMap.get(GPIOPin.propeller)?.pwmWrite(0)
-        this._pwmMap.get(GPIOPin.pump)?.pwmRange(100)
+        this._pwmMap.get(GPIOPin.pump)?.pwmRange(255)
 
     }
     checkPins(){
