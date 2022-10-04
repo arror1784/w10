@@ -11,6 +11,11 @@
         "from": "prebuilds",
         "to": "Release",
         "filter": "*.node"
+      },
+      {
+        "from": "prebuilds",
+        "to": "node_modules/pigpio/build/Release/",
+        "filter": "pigpio.node"
       }
       ,"!node_modules/pigpio/build/Release/*.node"
     ],
