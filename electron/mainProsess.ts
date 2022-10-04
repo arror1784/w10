@@ -17,11 +17,6 @@ else
 
 async function mainProsessing(mainWindow:BrowserWindow){
 
-    let data = fs.readFileSync("/home/jsh/workspace/w10/temp/USB/STORAGE/example3.hc")
-    let action = getCourseLoaderInstance().createActions(data.toString())
-    // console.log(action)
-    // console.log(getCourseLoaderInstance().getDuration())
-    
     ipcMain.on(WorkerCH.startRM,(event:IpcMainEvent,path:string)=>{
         try {
             let nameArr = path.split('/')
